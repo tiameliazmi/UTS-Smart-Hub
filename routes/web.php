@@ -9,9 +9,7 @@ Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -22,7 +20,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('master-data', \App\Http\Controllers\MasterDataController::class)->only(['index', 'store', 'destroy']);
     });
     
-    Route::resource('transactions', \App\Http\Controllers\TransactionController::class)->except(['show']);
+    Route::resource('transactions', \App\Http\Controllers\TransactionController::class)->only(['index', 'create', 'store']);
+    Route::resource('transactions', \App\Http\Controllers\TransactionController::class)->only(['edit', 'update', 'destroy'])->middleware('admin');
     Route::post('/bookings/{id}/checkin', [\App\Http\Controllers\CheckinController::class, 'checkin'])->name('bookings.checkin');
 
     // Notifications
