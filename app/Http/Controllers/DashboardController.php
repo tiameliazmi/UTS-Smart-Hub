@@ -5,28 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\Equipment;
 use App\Models\Booking;
 use App\Models\Checkin;
+use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $equipment = Equipment::count();
+        $totalEquipment = Equipment::count();
+        $totalBookings = Booking::count();
+        $pendingCount = Booking::where('status', 'pending')->count();
+        $approvedCount = Booking::where('status', 'approved')->count();
+        $returnedCount = Booking::where('status', 'returned')->count();
+        $rejectedCount = Booking::where('status', 'rejected')->count();
 
-        $booking = Booking::count();
-
-        $equipmentData = Equipment::all();
-
-        $bookingData = Booking::with('user', 'equipment')->get();
-
-        $checkinData = Checkin::with('booking.user', 'booking.equipment')->latest()->get();
-
-        return view('dashboard', compact(
-            'equipment',
-            'booking',
-            'equipmentData',
-            'bookingData',
-            'checkinData'
-        ));
+        return Inertia::render('Dashboard', [
+            'totalEquipment' => $totalEquipment,
+            'totalBookings' => $totalBookings,
+            'pendingCount' => $pendingCount,
+            'approvedCount' => $approvedCount,
+            'returnedCount' => $returnedCount,
+            'rejectedCount' => $rejectedCount,
+        ]);
     }
 
     public function approve($id)

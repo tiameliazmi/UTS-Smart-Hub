@@ -330,7 +330,7 @@ php artisan key:generate
 ```
 
 5. **Konfigurasi Database**
-编辑 `.env`:
+`.env`:
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1

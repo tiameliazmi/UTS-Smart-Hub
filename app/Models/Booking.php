@@ -25,4 +25,9 @@ class Booking extends Model
     {
         return $this->belongsTo(Equipment::class);
     }
+
+    public function checkin()
+    {
+        return $this->hasOne(Checkin::class);
+    }
 }
